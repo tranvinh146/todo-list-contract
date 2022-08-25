@@ -54,22 +54,16 @@ impl Tasks {
 #[near_bindgen]
 impl TodoList {
     pub fn get_todo_list(&self, account_id: AccountId) -> TaskView {
-        // let account_id = env::predecessor_account_id();
         let tasks_option = self.accounts.get(&account_id);
         match tasks_option {
             Some(tasks) => TaskView {
                 in_progress: tasks.in_progress.to_vec(),
                 completed: tasks.completed.to_vec(),
             },
-            None => {
-                // self.accounts.insert(&account_id, &Tasks::new());
-                // log!("Initialized new todo list");
-                // let tasks = self.accounts.get(&account_id).unwrap();
-                TaskView {
-                    in_progress: [].to_vec(),
-                    completed: [].to_vec(),
-                }
-            }
+            None => TaskView {
+                in_progress: [].to_vec(),
+                completed: [].to_vec(),
+            },
         }
     }
 
@@ -130,10 +124,6 @@ impl TodoList {
     }
 }
 
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- */
 #[cfg(test)]
 mod tests {
 
@@ -156,10 +146,6 @@ mod tests {
     fn get_empty_todo_list() {
         let todo_list = init_contract(PREDECESSOR);
         let get_task = todo_list.get_todo_list(env::predecessor_account_id());
-        // assert!(todo_list
-        //     .accounts
-        //     .contains_key(&env::predecessor_account_id()));
-        println!("{:?}", get_task);
         assert!(get_task.completed.is_empty());
         assert!(get_task.in_progress.is_empty());
     }
